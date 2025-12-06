@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 
-export default function CountdownTimerGame() {
+export default function CountdownTimerGame({ onNavigate }) {
   const [duration, setDuration] = useState(5); // Duration in seconds
   const [timeLeft, setTimeLeft] = useState(5000); // Time left in milliseconds
   const [isRunning, setIsRunning] = useState(false);
@@ -91,6 +91,12 @@ export default function CountdownTimerGame() {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        onPress={() => onNavigate('home')}
+        className="bg-gray-800 px-8 py-4 mb-4 rounded-lg shadow-lg self-start"
+      >
+        <Text className="text-white font-semibold text-lg">Back to Home</Text>
+      </TouchableOpacity>
       <Text style={styles.title}>Countdown Challenge</Text>
       <Text style={styles.subtitle}>How close can you get to 00:00?</Text>
 
@@ -154,8 +160,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#0f172a',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'start',
     padding: 20,
+    paddingTop: 100
   },
   title: {
     fontSize: 36,
@@ -177,11 +184,11 @@ const styles = StyleSheet.create({
   durationLabel: {
     fontSize: 16,
     color: '#cbd5e1',
-    fontWeight: '600',
+    fontWeight: '600'
   },
   durationInput: {
     width: 70,
-    height: 45,
+    height: 55,
     backgroundColor: '#1e293b',
     borderWidth: 2,
     borderColor: '#334155',
