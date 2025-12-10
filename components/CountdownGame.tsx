@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
+import Slider, {MarkerProps, SliderProps} from '@react-native-community/slider';
 
 export default function CountdownTimerGame({ onNavigate }) {
   const [duration, setDuration] = useState(5); // Duration in seconds
@@ -110,6 +111,29 @@ export default function CountdownTimerGame({ onNavigate }) {
     return '💪 Keep trying!';
   };
 
+  const StepMarker: FC<MarkerProps> = ({currentValue}) => {
+    return (
+      <Text style={styles.durationLabel}>{currentValue}</Text>
+    )
+  }
+
+  const DurationSlider = (props: SliderProps) => {
+    const [sliderValue, setSliderValue] = useState(props.value ?? 5)
+
+    return (
+      <Slider
+        style={{width: '80%', maxWidth: 400, height: 40}}
+        minimumValue={5}
+        maximumValue={60}
+        step={5}
+        value={5}
+        StepMarker={StepMarker}
+        minimumTrackTintColor="#FFFFFF"
+        maximumTrackTintColor="#666"
+      />
+    )
+  }
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -120,9 +144,20 @@ export default function CountdownTimerGame({ onNavigate }) {
       </TouchableOpacity>
       <Text style={styles.title}>Countdown Challenge</Text>
       <Text style={styles.subtitle}>How close can you get to 00:00?</Text>
-
+      <DurationSlider />
+      {/* <Slider
+        style={{width: '80%', maxWidth: 400, height: 40}}
+        minimumValue={5}
+        maximumValue={60}
+        step={5}
+        value={5}
+        StepMarker={StepMarker}
+        minimumTrackTintColor="#FFFFFF"
+        maximumTrackTintColor="#666"
+      /> */}
       <View style={styles.durationSelector}>
         <Text style={styles.durationLabel}>Duration (seconds):</Text>
+
         <TextInput
           style={styles.durationInput}
           value={String(duration)}
