@@ -68,35 +68,24 @@ export default function CountdownTimerGame({ onNavigate }) {
     }
   };
 
-  const handleDurationChange = (text) => {
-    const num = parseInt(text) || 1;
-    const clampedNum = Math.max(1, Math.min(99, num)); // Limit between 1-99 seconds
-    setDuration(clampedNum);
-    setTimeLeft(clampedNum * 1000);
-    setFinalTime(null);
-  };
-
   const formatTime = (ms) => {
     let totalSeconds;
     let milliseconds;
-    let seconds;
+    
     if(ms < 0) {
       totalSeconds = Math.ceil(ms / 1000);
-      milliseconds = Math.abs(Math.floor((ms % 1000) / 10))
-      seconds = totalSeconds % 60;
+      milliseconds = Math.abs(Math.floor((ms % 1000) / 10));
     } else {
       totalSeconds = Math.floor(ms / 1000);
       milliseconds = Math.floor((ms % 1000) / 10);
-      seconds = totalSeconds % 60;
     }
-  
+    
     // Display -0 if remaining ms is between -1 and -999
     let secondsStr;
     if(ms < 0 && ms > -1000){
-      console.log('ms is between -1 and -999')
-      secondsStr = '-0'
+      secondsStr = '-0';
     } else {
-      secondsStr = String(seconds).padStart(2, '0')
+      secondsStr = String(totalSeconds).padStart(2, '0');
     }
     
     return `${secondsStr}:${String(milliseconds).padStart(2, '0')}`;
@@ -120,7 +109,7 @@ export default function CountdownTimerGame({ onNavigate }) {
   const DurationSlider = ({ value, onValueChange }: { value: number, onValueChange: (value: number) => void }) => {
     return (
       <View style={{ alignItems: 'center', width: '100%', marginBottom: 20 }}>
-        <Text style={styles.durationLabel}>{value}s</Text>
+        <Text style={styles.durationLabel}>Duration: {value} seconds</Text>
         <Slider
           style={{width: '80%',  maxWidth: 400, height: 40}}
           minimumValue={5}
