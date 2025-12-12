@@ -131,6 +131,7 @@ export default function CountdownTimerGame({ onNavigate }) {
           StepMarker={StepMarker}
           minimumTrackTintColor="#FFFFFF"
           maximumTrackTintColor="#666"
+          disabled={isRunning}
         />
       </View>
     )
