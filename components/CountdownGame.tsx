@@ -104,33 +104,35 @@ export default function CountdownTimerGame({ onNavigate }) {
 
   const getResultMessage = () => {
     if (finalTime === null) return '';
-    if (finalTime === 0) return '🎯 PERFECT! You hit 00:00!';
-    if (finalTime <= 100) return '🔥 Amazing! So close!';
-    if (finalTime <= 500) return '👏 Great job!';
-    if (finalTime <= 1000) return '👍 Good attempt!';
-    return '💪 Keep trying!';
+    if (finalTime === 0) return 'PERFECT! You hit 00:00!';
+    if (finalTime <= 100) return 'Amazing! So close!';
+    if (finalTime <= 500) return 'Great job!';
+    if (finalTime <= 1000) return 'Good attempt!';
+    return 'Keep trying!';
   };
 
   const StepMarker: FC<MarkerProps> = ({currentValue}) => {
     return (
-      <Text style={styles.durationLabel}>{currentValue}</Text>
+      <Text style={styles.marker}>|</Text>
     )
   }
 
-  const DurationSlider = (props: SliderProps) => {
-    const [sliderValue, setSliderValue] = useState(props.value ?? 5)
-
+  const DurationSlider = ({ value, onValueChange }: { value: number, onValueChange: (value: number) => void }) => {
     return (
-      <Slider
-        style={{width: '80%', maxWidth: 400, height: 40}}
-        minimumValue={5}
-        maximumValue={60}
-        step={5}
-        value={5}
-        StepMarker={StepMarker}
-        minimumTrackTintColor="#FFFFFF"
-        maximumTrackTintColor="#666"
-      />
+      <View style={{ alignItems: 'center', width: '100%', marginBottom: 20 }}>
+        <Text style={styles.durationLabel}>{value}s</Text>
+        <Slider
+          style={{width: '80%',  maxWidth: 400, height: 40}}
+          minimumValue={5}
+          maximumValue={60}
+          step={5}
+          value={value}
+          onValueChange={onValueChange}
+          StepMarker={StepMarker}
+          minimumTrackTintColor="#FFFFFF"
+          maximumTrackTintColor="#666"
+        />
+      </View>
     )
   }
 
@@ -144,30 +146,14 @@ export default function CountdownTimerGame({ onNavigate }) {
       </TouchableOpacity>
       <Text style={styles.title}>Countdown Challenge</Text>
       <Text style={styles.subtitle}>How close can you get to 00:00?</Text>
-      <DurationSlider />
-      {/* <Slider
-        style={{width: '80%', maxWidth: 400, height: 40}}
-        minimumValue={5}
-        maximumValue={60}
-        step={5}
-        value={5}
-        StepMarker={StepMarker}
-        minimumTrackTintColor="#FFFFFF"
-        maximumTrackTintColor="#666"
-      /> */}
-      <View style={styles.durationSelector}>
-        <Text style={styles.durationLabel}>Duration (seconds):</Text>
-
-        <TextInput
-          style={styles.durationInput}
-          value={String(duration)}
-          onChangeText={handleDurationChange}
-          keyboardType="number-pad"
-          maxLength={2}
-          editable={!isRunning}
-        />
-      </View>
-
+      <DurationSlider 
+        value={duration}
+        onValueChange={(value) => {
+          setDuration(value);
+          setTimeLeft(value * 1000)
+          setFinalTime(null)
+        }}
+      />
       <View style={styles.timerContainer}>
         {isVisible ? (
           <>
@@ -238,9 +224,13 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   durationLabel: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#cbd5e1',
     fontWeight: '600'
+  },
+  marker: {
+    fontSize: 12,
+    color: '#cbd5e1'
   },
   durationInput: {
     width: 70,
