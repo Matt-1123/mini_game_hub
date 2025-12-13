@@ -24,12 +24,12 @@ export default function CountdownTimerGame({ onNavigate }) {
         
         setTimeLeft(remaining);
         
-        // End game at -10 seconds (-10000 ms)
-        if (remaining <= -10000) {
-          clearInterval(intervalRef.current);
+        // End game at -5 seconds (-5000 ms)
+        if (remaining <= -5000) {
+          // Stop the countdown and show result
           setIsRunning(false);
           setIsVisible(true);
-          setTimeLeft(-10000);
+          setFinalTime(timeLeft);
         }
       }, 10);
     }
@@ -94,9 +94,10 @@ export default function CountdownTimerGame({ onNavigate }) {
   const getResultMessage = () => {
     if (finalTime === null) return '';
     if (finalTime === 0) return 'PERFECT! You hit 00:00!';
-    if (finalTime <= 100) return 'Amazing! So close!';
+    if (finalTime <= 100) return 'Amazing, so close!';
     if (finalTime <= 500) return 'Great job!';
     if (finalTime <= 1000) return 'Good attempt!';
+    if (finalTime <= 5000) return 'Timed Out. Better luck next time!'
     return 'Keep trying!';
   };
 
@@ -153,22 +154,24 @@ export default function CountdownTimerGame({ onNavigate }) {
             )}
           </>
         ) : (
-          <Text style={styles.hiddenText}>Timer Hidden...</Text>
+          <Text style={styles.hiddenText}>Try to press Stop at exactly 0!</Text>
         )}
       </View>
 
-      <TouchableOpacity
-        style={[styles.button, isRunning && styles.buttonRunning]}
-        onPress={handlePress}
-      >
-        <Text style={styles.buttonText}>
-          {isRunning ? 'STOP' : 'START'}
-        </Text>
-      </TouchableOpacity>
+      {(isRunning || finalTime === null) && (
+        <TouchableOpacity
+          style={[styles.button, isRunning && styles.buttonRunning]}
+          onPress={handlePress}
+        >
+          <Text style={styles.buttonText}>
+            {isRunning ? 'STOP' : 'START'}
+          </Text>
+        </TouchableOpacity>
+      )}
 
       {!isRunning && timeLeft !== duration * 1000 && (
         <TouchableOpacity style={styles.resetButton} onPress={handleReset}>
-          <Text style={styles.resetText}>Reset</Text>
+          <Text style={styles.resetText}>Try Again</Text>
         </TouchableOpacity>
       )}
 
@@ -222,19 +225,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#cbd5e1'
   },
-  durationInput: {
-    width: 70,
-    height: 55,
-    backgroundColor: '#1e293b',
-    borderWidth: 2,
-    borderColor: '#334155',
-    borderRadius: 12,
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
-    textAlign: 'center',
-    paddingHorizontal: 8,
-  },
   timerContainer: {
     minHeight: 120,
     alignItems: 'center',
@@ -282,17 +272,15 @@ const styles = StyleSheet.create({
   },
   resetButton: {
     marginTop: 30,
-    paddingHorizontal: 32,
-    paddingVertical: 12,
-    borderRadius: 24,
-    backgroundColor: '#1e293b',
-    borderWidth: 2,
-    borderColor: '#334155',
+    paddingHorizontal: 48,
+    paddingVertical: 24,
+    borderRadius: 48,
+    backgroundColor: '#a70ad6',
   },
   resetText: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: '600',
-    color: '#94a3b8',
+    color: '#fff',
   },
   instructions: {
     position: 'absolute',
