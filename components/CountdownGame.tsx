@@ -4,8 +4,8 @@ import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-nativ
 import Slider, {MarkerProps, SliderProps} from '@react-native-community/slider';
 
 export default function CountdownTimerGame({ onNavigate }) {
-  const [duration, setDuration] = useState(5); // Duration in seconds
-  const [timeLeft, setTimeLeft] = useState(5000); // Time left in milliseconds
+  const [duration, setDuration] = useState(3); // Duration in seconds
+  const [timeLeft, setTimeLeft] = useState(3000); // Time left in milliseconds
   const [isRunning, setIsRunning] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [finalTime, setFinalTime] = useState(null);
@@ -113,9 +113,9 @@ export default function CountdownTimerGame({ onNavigate }) {
         <Text style={styles.durationLabel}>Duration: {value} seconds</Text>
         <Slider
           style={{width: '80%',  maxWidth: 400, height: 40}}
-          minimumValue={5}
-          maximumValue={60}
-          step={5}
+          minimumValue={3}
+          maximumValue={30}
+          step={3}
           value={value}
           onValueChange={onValueChange}
           StepMarker={StepMarker}
