@@ -69,6 +69,13 @@ export default function CountdownTimerGame({ onNavigate }) {
           </Text>
         </TouchableOpacity>
       )} */}
+      <TouchableOpacity
+        style={styles.button}
+      >
+        <Text style={styles.buttonText}>
+            Start
+        </Text>
+      </TouchableOpacity>
 
       {/* {!isRunning && timeLeft !== duration * 1000 && (
         <TouchableOpacity style={styles.resetButton} onPress={handleReset}>
