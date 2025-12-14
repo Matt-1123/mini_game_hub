@@ -3,14 +3,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import Slider, {MarkerProps, SliderProps} from '@react-native-community/slider';
 
-export default function CountdownTimerGame({ onNavigate }) {
-  const [duration, setDuration] = useState(3); // Random duration until button changes green
-  const [timeLeft, setTimeLeft] = useState(3000); // Time left in milliseconds
+export default function ReflexTest({ onNavigate }) {
+  // Generate random duration between 1000 and 8000 milliseconds on initial load
+  const getRandomDuration = () => Math.floor(Math.random() * 7000) + 1000;
+  const initialDuration = useRef(getRandomDuration()).current;
+  
+  const [duration, setDuration] = useState(initialDuration); // Random duration until button changes green
+  const [timeLeft, setTimeLeft] = useState(initialDuration); // Time left in milliseconds
   const [isRunning, setIsRunning] = useState(false); // Is the button red
   const [isResultVisible, setIsResultVisible] = useState(false); // Show result when green button pressed
   const [finalTime, setFinalTime] = useState(null); // Total time user takes to press green button
-
-  
 
   const handlePress = () => {
     console.log('pressed')
