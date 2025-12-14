@@ -7,13 +7,53 @@ export default function ReflexTest({ onNavigate }) {
   // Generate random duration between 1000 and 8000 milliseconds on initial load
   const getRandomDuration = () => Math.floor(Math.random() * 7000) + 1000;
   const initialDuration = useRef(getRandomDuration()).current;
+
+  const newGame = () => {
+    const newDuration = getRandomDuration();
+    console.log('new duration: ', newDuration)
+    setDuration(newDuration);
+    setTimeLeft(newDuration);
+  }
   
   const [duration, setDuration] = useState(initialDuration); // Random duration until button changes green
   const [timeLeft, setTimeLeft] = useState(initialDuration); // Time left in milliseconds
   const [isRunning, setIsRunning] = useState(false); // Is the button red
+  const [isButtonGreen, setIsButtonGreen] = useState(false)
   const [isResultVisible, setIsResultVisible] = useState(false); // Show result when green button pressed
   const [finalTime, setFinalTime] = useState(null); // Total time user takes to press green button
+  const intervalRef = useRef(null);
+  const startTimeRef = useRef(null);
+  const targetTimeRef = useRef(null);
 
+  console.log('initial duration: ', duration)
+  console.log('timeLeft: ', timeLeft)
+
+  useEffect(() => {
+    if (isRunning) {
+      startTimeRef.current = Date.now();
+      targetTimeRef.current = startTimeRef.current + timeLeft;
+
+      intervalRef.current = setInterval(() => {
+        const now = Date.now();
+        const remaining = targetTimeRef.current - now;
+        
+        setTimeLeft(remaining);
+
+        if (remaining <= 0) {
+          setIsButtonGreen(true);
+          console.log('timer complete, turn button green');
+          setIsRunning(false);
+        }
+      }, 10);
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [isRunning]);
+  
   const handlePress = () => {
     setIsRunning(!isRunning);
     console.log('isRunning: ', isRunning)
@@ -73,7 +113,7 @@ export default function ReflexTest({ onNavigate }) {
         </TouchableOpacity>
       )} */}
       <TouchableOpacity
-        style={[styles.button, isRunning && styles.buttonRunning]}
+        style={[styles.button, isRunning && styles.buttonRunning, isButtonGreen && styles.buttonGreen]}
         onPress={handlePress}
       >
         <Text style={styles.buttonText}>
@@ -176,6 +216,11 @@ const styles = StyleSheet.create({
   buttonRunning: {
     backgroundColor: '#ef4444',
     shadowColor: '#ef4444',
+  },
+  buttonGreen: {
+    backgroundColor: '#90be6d',
+    shadowColor: '#90be6d'
+
   },
   buttonText: {
     fontSize: 28,
