@@ -15,7 +15,8 @@ export default function ReflexTest({ onNavigate }) {
   const [finalTime, setFinalTime] = useState(null); // Total time user takes to press green button
 
   const handlePress = () => {
-    console.log('pressed')
+    setIsRunning(!isRunning);
+    console.log('isRunning: ', isRunning)
   };
 
   const handleReset = () => {
@@ -72,10 +73,11 @@ export default function ReflexTest({ onNavigate }) {
         </TouchableOpacity>
       )} */}
       <TouchableOpacity
-        style={styles.button}
+        style={[styles.button, isRunning && styles.buttonRunning]}
+        onPress={handlePress}
       >
         <Text style={styles.buttonText}>
-            Start
+            {isRunning ? 'Wait...' : 'Start'}
         </Text>
       </TouchableOpacity>
 
