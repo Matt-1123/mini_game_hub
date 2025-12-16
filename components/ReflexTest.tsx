@@ -1,7 +1,6 @@
 // @ts-nocheck
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
-import Slider, {MarkerProps, SliderProps} from '@react-native-community/slider';
+import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function ReflexTest({ onNavigate }) {
   // Generate random duration between 1000 and 8000 milliseconds on initial load
@@ -17,19 +16,23 @@ export default function ReflexTest({ onNavigate }) {
   
   const [duration, setDuration] = useState(initialDuration); // Random duration until button changes green
   const [timeLeft, setTimeLeft] = useState(initialDuration); // Time left in milliseconds
-  const [isRunning, setIsRunning] = useState(false); // Is the button red
+  const [isCountdownRunning, setIsCountdownRunning] = useState(false); // Is the button red
+  const [isCountUpRunning, setIsCountUpRunning] = useState(false); // start counting up for final time when button turns green
   const [isButtonGreen, setIsButtonGreen] = useState(false)
   const [isResultVisible, setIsResultVisible] = useState(false); // Show result when green button pressed
   const [finalTime, setFinalTime] = useState(null); // Total time user takes to press green button
-  const intervalRef = useRef(null);
-  const startTimeRef = useRef(null);
+  const intervalRef = useRef(null); // Count down
+  const startTimeRef = useRef(null); // Count down
+  const countUpIntervalRef = useRef(null); // Count up
+  const countUpStartTimeRef = useRef(null); // Count up
   const targetTimeRef = useRef(null);
 
   console.log('initial duration: ', duration)
   console.log('timeLeft: ', timeLeft)
 
+  // Count down (button red)
   useEffect(() => {
-    if (isRunning) {
+    if (isCountdownRunning) {
       startTimeRef.current = Date.now();
       targetTimeRef.current = startTimeRef.current + timeLeft;
 
@@ -42,7 +45,7 @@ export default function ReflexTest({ onNavigate }) {
         if (remaining <= 0) {
           setIsButtonGreen(true);
           console.log('timer complete, turn button green');
-          setIsRunning(false);
+          setIsCountdownRunning(false);
         }
       }, 10);
     }
@@ -52,11 +55,34 @@ export default function ReflexTest({ onNavigate }) {
         clearInterval(intervalRef.current);
       }
     };
-  }, [isRunning]);
+  }, [isCountdownRunning]);
+
+  // Count up - button green
+  useEffect(() => {
+    if (isCountUpRunning) {
+      countUpStartTimeRef.current = Date.now();
+      countUpIntervalRef.current = setInterval(() => {
+        const now = Date.now();
+        const elapsed = now - countUpStartTimeRef.current;
+        
+        setFinalTime(elapsed);
+      }, 10);
+    } else {
+      if (countUpIntervalRef.current) {
+        clearInterval(countUpIntervalRef.current);
+      }
+    }
+    
+    return () => {
+      if (countUpIntervalRef.current) {
+        clearInterval(countUpIntervalRef.current);
+      }
+    };
+  }, [isCountUpRunning]);
   
   const handlePress = () => {
-    setIsRunning(!isRunning);
-    console.log('isRunning: ', isRunning)
+    setIsCountdownRunning(!isCountdownRunning);
+    console.log('isCountdownRunning: ', isCountdownRunning)
   };
 
   const handleReset = () => {
@@ -113,11 +139,11 @@ export default function ReflexTest({ onNavigate }) {
         </TouchableOpacity>
       )} */}
       <TouchableOpacity
-        style={[styles.button, isRunning && styles.buttonRunning, isButtonGreen && styles.buttonGreen]}
+        style={[styles.button, isCountdownRunning && styles.buttonRunning, isButtonGreen && styles.buttonGreen]}
         onPress={handlePress}
       >
         <Text style={styles.buttonText}>
-            {isRunning ? 'Wait...' : isButtonGreen ? 'Go!' : 'Start'}
+            {isCountdownRunning ? 'Wait...' : isButtonGreen ? 'Go!' : 'Start'}
         </Text>
       </TouchableOpacity>
 
