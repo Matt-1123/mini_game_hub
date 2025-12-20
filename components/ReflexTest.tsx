@@ -133,10 +133,10 @@ export default function ReflexTest({ onNavigate }) {
       </View>
       <TouchableOpacity
         style={[styles.button, isCountdownRunning && styles.buttonRunning, isButtonGreen && styles.buttonGreen]}
-        onPress={isCountdownRunning ? handleWrongPress : isButtonGreen ? handleGoPress : handleStartPress}
+        onPress={isCountdownRunning ? handleWrongPress : isButtonGreen && isCountUpRunning ? handleGoPress : finalTime && !isCountUpRunning ? handleReset : handleStartPress}
       >
         <Text style={styles.buttonText}>
-            {isCountdownRunning ? 'Wait...' : isButtonGreen ? 'Go!' : 'Start'}
+            {isCountdownRunning ? 'Wait...' : isButtonGreen && isCountUpRunning ? 'Go!' : finalTime && !isCountUpRunning ? 'Try Again' : 'Start'}
         </Text>
       </TouchableOpacity>
 
