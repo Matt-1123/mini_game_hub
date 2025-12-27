@@ -39,32 +39,6 @@
             "backgroundColor": "#000000"
           }
         }
-      ],
-      [
-        "expo-font",
-        {
-          "fonts": [
-            "./assets/fonts/PressStart2PRegular.ttf"
-          ],
-          "android": {
-            "fonts": [
-              {
-                "fontFamily": "PressStart2P",
-                "fontDefinitions": [
-                  {
-                    "path": "./assets/fonts/PressStart2PRegular.ttf"
-                  },
-                  {
-                    "path": "./assets/fonts/PressStart2PRegular.ttf"
-                  }
-                ]
-              }
-            ]
-          },
-          "ios": {
-            "fonts": ["./assets/fonts/PressStart2PRegular.ttf"]
-          }
-        }
       ]
     ],
     "experiments": {
